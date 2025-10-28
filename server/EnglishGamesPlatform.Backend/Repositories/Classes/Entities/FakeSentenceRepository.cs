@@ -13,11 +13,9 @@ namespace EnglishGamesPlatform.Backend.Repositories.Classes
         {
             _appDbContext = appDbContext;
         }
-        public async Task<List<GrammarQuestionFakeSentence>> GetByQuestionIdAsync(int questionId)
+        public async Task<List<GrammarQuestionFakeSentence>> GetAllAsync()
         {
-            return await _appDbContext.GrammarQuestionFakeSentences
-                .Where(fs => fs.GrammarQuestionId == questionId)
-                .ToListAsync();
+            return await _appDbContext.GrammarQuestionFakeSentences.ToListAsync();
         }
     }
 }

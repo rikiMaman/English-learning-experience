@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { GameProps } from "@/components/common/GameLayout";
 import { motion, AnimatePresence } from "framer-motion";
 import { GameId } from "@/types";
@@ -22,13 +22,22 @@ export default function OppositeQuestGame({ onScoreChange, onGameOver, paused,ti
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
   const [isWaiting, setIsWaiting] = useState(false);
 
+  const progress=currentIndex / items.length*100;
+
+
   const user = useSelector((state: any) => state.user.user);
   const submitProgressMutation = useSubmitProgress();
-  // const { data: leaderboardData } = useLeaderboard(gameId);
   const { data: leaderboardData, refetch: refetchLeaderboard } = useLeaderboard(gameId, {
-    refetchInterval: 5000, // כל 5 שניות
+    refetchInterval: 5000, 
   });
   
+const correctSound = useRef<HTMLAudioElement | null>(null);
+const wrongSound = useRef<HTMLAudioElement | null>(null);
+
+useEffect(() => {
+  correctSound.current = new Audio("/sounds/success.mp3");
+  wrongSound.current = new Audio("/sounds/error.mp3");
+}, []);
   const { data, isLoading, isError, refetch } = useGameData(gameId); 
 
   const restartGame = async () => {
@@ -61,10 +70,22 @@ export default function OppositeQuestGame({ onScoreChange, onGameOver, paused,ti
     setIsWaiting(true);
 
     if (isCorrect) {
+      if (correctSound.current) {
+        correctSound.current.pause();
+        correctSound.current.currentTime = 0;
+        correctSound.current.play();
+      }
       setScore((prev) => prev + 1);
       onScoreChange?.((prev) => (prev ?? 0) + 1);
       setFeedback("correct");
+
     } else {
+      
+      if (wrongSound.current) {
+        wrongSound.current.pause();
+        wrongSound.current.currentTime = 0;
+        wrongSound.current.play();
+      }
       setFeedback("wrong");
       setHighlightIndex(currentItem.correctIndex);
     }
@@ -95,7 +116,7 @@ export default function OppositeQuestGame({ onScoreChange, onGameOver, paused,ti
         rounds: items.length,
       });
     }
-  }, [completed,score]); 
+  }, [completed]); 
   
   const endGame = async () => {
     setCompleted(true);
@@ -111,6 +132,7 @@ export default function OppositeQuestGame({ onScoreChange, onGameOver, paused,ti
 
   if (completed) {
     return (
+      
       <div className="flex flex-col items-center justify-center min-h-[300px]">
         <p className="text-2xl font-bold text-center">🎉 Game Over!</p>
         <p className="text-lg mt-2 text-gray-700">Final Score: {score}</p>
@@ -125,7 +147,29 @@ export default function OppositeQuestGame({ onScoreChange, onGameOver, paused,ti
   }
 
   return (
+   
     <div className="opposite-quest-game grid gap-4 relative min-h-[320px]">
+       <div
+        className="progress-bar"
+        style={{
+          width: "100%",
+          background: "#eee",
+          height: "10px",
+          borderRadius: "5px",
+          marginBottom: "15px",
+        }}
+      >
+        <div
+          className="progress-bar__fill"
+          style={{
+            width: `${progress}%`,
+            background: "#4caf50",
+            height: "100%",
+            borderRadius: "5px",
+            transition: "width 0.4s ease",
+          }}
+        />
+      </div>
       <h2 className="text-2xl font-bold text-center">{currentItem.word}</h2>
 
       <div className="grid md:grid-cols-2 gap-3">
@@ -150,6 +194,7 @@ export default function OppositeQuestGame({ onScoreChange, onGameOver, paused,ti
             </button>
           );
         })}
+        
       </div>
 
       <AnimatePresence>

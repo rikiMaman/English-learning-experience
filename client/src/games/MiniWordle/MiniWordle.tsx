@@ -110,12 +110,17 @@ export default function MiniWordle({
         const guess = boardRef.current[currentRowRef.current];
         const rowColorResult = getRowColors(guess, targetWord.toUpperCase());
 
-        let roundScore = 0;
-        rowColorResult.forEach(c => {
-            if (c === "correct") roundScore += 2;
-            else if (c === "present") roundScore += 1;
-        });
+
+        let correctCount = rowColorResult.filter(c => c === "correct").length;
+        let presentCount = rowColorResult.filter(c => c === "present").length;
+
+        let baseScore = correctCount * 4 + presentCount * 2;
+        let efficiencyMultiplier = (maxGuesses - currentRowRef.current) / maxGuesses;
+
+        let roundScore = Math.round(baseScore * efficiencyMultiplier);
         onScoreChange?.(roundScore);
+
+
 
         setRevealingRow(currentRowRef.current);
         rowColorResult.forEach((c, i) => {

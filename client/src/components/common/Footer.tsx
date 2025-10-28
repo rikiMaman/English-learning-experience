@@ -14,7 +14,7 @@ export default function Footer() {
     { name: "Dvora Etinger", url: "/games/memory-match-synonyms" },
     { name: "Rivki Merchavi", url: "/games/memory-match-antonyms" },
     { name: "Shani Gavra", url: "/games/reveal-it" },
-    { name: "Yaffa Wertaimer", url: "/games/wordsorter" },
+    { name: "Yaffa Wertaimer", url: "/games/word-sorter" },
     { name: "Avital Goldring", url: "/games/letter-chaos" },
     { name: "Abigail Berk", url: "/games/guessmaster-20" },
     { name: "Shira Shtiglitz", url: "/games/double-vision" },

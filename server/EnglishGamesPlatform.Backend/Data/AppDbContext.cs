@@ -26,6 +26,7 @@ namespace EnglishGamesPlatform.Backend.Data
         public DbSet<WordQuestionAnswerEntity> WordQuestionAnswers { get; set; }
         public DbSet<GuessMasterSession> GuessMasterSessions { get; set; }
 
+        public DbSet<Phrase> Phrases { get; set; }
 
         public DbSet<ImageSentence> ImageSentences { get; set; }
 

@@ -1,5 +1,6 @@
 "use client";
 import React, { FC } from "react";
+import Button from "../ui/Button";
 
 type HelpScreenProps = {
   onContinue?: () => void;
@@ -15,12 +16,12 @@ const HelpScreen: FC<HelpScreenProps> = ({ onContinue, instructions }) => {
       </p>
 
       {onContinue && (
-        <button
+        <Button
           onClick={onContinue}
           className="btn-primary help-screen__button"
         >
           Move to the game
-        </button>
+        </Button>
       )}
     </div>
   );

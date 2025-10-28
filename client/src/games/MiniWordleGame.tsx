@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import MiniWordle from "./mini-wordle/MiniWordle";
+import MiniWordle from "./MiniWordle/MiniWordle";
 import { GameProps } from "@/components/common/GameLayout";
 import { useGameData } from "@/hooks/useGameData";
 import { GameId } from "@/types";

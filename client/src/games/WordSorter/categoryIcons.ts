@@ -17,13 +17,13 @@ import {
     Grid
   } from "lucide-react";
   
-  // מיפוי קטגוריות לאייקונים
+  
   export const categoryIcons: Record<string, React.ElementType> = {
     fruits: Apple,
     animals: Dog,
     stationery: Pencil,
     colors: Palette,
-    dothes: Shirt, // כנראה clothes - אבל השארתי כפי שבטבלה
+    dothes: Shirt, 
     actions: Activity,
     emotions: Smile,
     numbers: Hash,
@@ -34,12 +34,12 @@ import {
     "household items": Home,
     transport: Car,
     weather: Cloud,
-    General: Grid // כללי
+    General: Grid 
   };
   
-  // פונקציה נוחה להחזיר איקון לפי שם קטגוריה
+  
   export const getCategoryIcon = (name: string): React.ElementType => {
     const key = name.toLowerCase().trim();
-    return categoryIcons[key] || Grid; // Grid כברירת מחדל אם לא נמצא
+    return categoryIcons[key] || Grid;
   };
   

@@ -1,4 +1,3 @@
-// src/app/games/opposite-quest/page.tsx
 'use client';
 
 import React from 'react';
@@ -8,7 +7,7 @@ import OppositeQuestGame from '@/games/OppositeQuestGame';
 export default function OppositeQuestPage() {
 
   const handleGameOver = () => {
-    console.log("🎮 המשחק הסתיים! זמן והניקוד מטופלים ב-GameLayout");
+    console.log("🎮 The game is over! Time and score are handled in GameLayout");
   };
 
   return (

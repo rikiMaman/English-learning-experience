@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import Button from "../ui/Button";
 
 type GameOverModalProps = {
   score: number;
@@ -30,12 +31,12 @@ export default function GameOverModal({ score, time, onRestart }: GameOverModalP
         </p>
 
         <div className="gameover-modal__buttons">
-          <button onClick={goToLeaderboard} className="btn-primary gameover-modal__button">
+          <Button onClick={goToLeaderboard} className="btn-primary gameover-modal__button">
             View Leaderboard
-          </button>
-          <button onClick={onRestart} className="btn-primary gameover-modal__button">
+          </Button>
+          <Button onClick={onRestart} className="btn-primary gameover-modal__button">
             Restart
-          </button>
+          </Button>
 
         </div>
       </div>

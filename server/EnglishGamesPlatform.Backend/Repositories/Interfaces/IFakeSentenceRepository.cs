@@ -4,7 +4,8 @@ namespace EnglishGamesPlatform.Backend.Repositories.Interfaces
 {
     public interface IFakeSentenceRepository
     {
-        Task<List<GrammarQuestionFakeSentence>> GetByQuestionIdAsync(int questionId);
+        Task<List<GrammarQuestionFakeSentence>> GetAllAsync();
+        
 
     }
 }

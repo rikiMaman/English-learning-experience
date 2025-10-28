@@ -5,14 +5,14 @@ import type {
   GuessMasterAskResponse,
 } from "@/types/gamesTypes/GuessMaster";
 
-const BASE = process.env.NEXT_PUBLIC_BACKEND_URL ?? "https://localhost:7292";
+const BASE = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:5075";
 const GAME_ID = 14;
 
 const URLS = {
-  data:        `${BASE}/api/v1/GeneralGame/${GAME_ID}/data`,
+  data: `${BASE}/api/v1/GeneralGame/${GAME_ID}/data`,
   leaderboard: `${BASE}/api/v1/GeneralGame/${GAME_ID}/leaderboard`,
-  progress:    `${BASE}/api/v1/GeneralGame/${GAME_ID}/progress`,
-  ask:         `${BASE}/api/v1/games/guessmaster-20/ask`,
+  progress: `${BASE}/api/v1/GeneralGame/${GAME_ID}/progress`,
+  ask: `${BASE}/api/v1/games/guessmaster-20/ask`,
 };
 
 console.log("[GM20] URLs:", URLS);

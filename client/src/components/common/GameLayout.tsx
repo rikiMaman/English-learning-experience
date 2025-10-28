@@ -74,6 +74,7 @@ export default function GameLayout({ children, gameTitle }: GameLayoutProps) {
     setGameOver(false);
     reset();
     resetGame();
+    
   };
 
   const handleScoreChange = (value: number | ((prev: number) => number)) => {

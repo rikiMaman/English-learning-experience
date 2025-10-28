@@ -1,192 +1,171 @@
-// "use client";
-// import { useState, useEffect, useRef } from "react";
-// import { GameProps } from "@/components/common/GameLayout";
-// import { motion } from "framer-motion";
-// import { GameId } from "@/types";
-// import { useGameData } from "@/hooks/useGameData";
-// import { DoubleVisionItem } from "@/types/gamesTypes/DoubleVision";
-// import { useLeaderboard } from "@/hooks/useLeaderboard";
-// import { useSubmitProgress } from "@/hooks/useSubmitProgress";
-// import { useSelector } from "react-redux";
-// import { useLeaderboardStore } from "@/store/UseLeaderboardStore";
+"use client";
+import { useState, useEffect, useRef } from "react";
+import { GameProps } from "@/components/common/GameLayout";
+import { motion } from "framer-motion";
+import { GameId } from "@/types";
+import { useGameData } from "@/hooks/useGameData";
+import { DoubleVisionItem } from "@/types/gamesTypes/DoubleVision";
+import { useLeaderboard } from "@/hooks/useLeaderboard";
+import { useSubmitProgress } from "@/hooks/useSubmitProgress";
+import { useSelector } from "react-redux";
 
-// export default function DoubleVisionGame({ onScoreChange, onGameOver, paused, time }: GameProps) {
-//   const gameId: GameId = 12;
+export default function DoubleVisionGame({ onScoreChange, onGameOver, paused, time }: GameProps) {
+  const gameId: GameId = 12;
 
-//   // Hooks לטעינת הנתונים
-//   const { data, isLoading, isError, refetch } = useGameData(gameId, { staleTime: 0 });
-//   const { data: leaderboardData, refetch: refetchLeaderboard } = useLeaderboard(gameId);
+  // Hooks לטעינת הנתונים
+  const { data, isLoading, isError, refetch } = useGameData(gameId, { staleTime: 0 });
+  const { data: leaderboardData, refetch: refetchLeaderboard } = useLeaderboard(gameId);
 
-//   // Hook לשליחת נתוני המשחק
-//   const submitProgressMutation = useSubmitProgress();
+  // Hook לשליחת נתוני המשחק
+  const submitProgressMutation = useSubmitProgress();
 
-//   // Redux - user
-//   const user = useSelector((state: any) => state.user.user);
+  // Redux - user
+  const user = useSelector((state: any) => state.user.user);
 
-//   // State למשחק
-//   const [currentRound, setCurrentRound] = useState(0);
-//   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-//   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-//   const [rounds, setRounds] = useState<DoubleVisionItem[]>([]);
-//   const hasFetchedRef = useRef(false);
+  // State למשחק
+  const [currentRound, setCurrentRound] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [rounds, setRounds] = useState<DoubleVisionItem[]>([]);
+  const hasFetchedRef = useRef(false);
 
-//   const setLeaderboard = useLeaderboardStore((state) => state.setLeaderboard);
+  console.log("Leaderboard:", leaderboardData?.data.leaderboards);
 
-//   console.log("Leaderboard:", leaderboardData?.data.leaderboards);
-//   // useEffect(() => {
-//   //   if (leaderboardData) {
-//   //     console.log("Leaderboard at game over:", leaderboardData.data.leaderboards);
-//   //     // או עדכני state/props כדי להציג את הלידרבורד במסך הסיום
-//   //   }
-//   // }, [leaderboardData]);
+  //   // Ref לשמירת הזמן המדויק
+  const timeRef = useRef(time);
+  useEffect(() => {
+    timeRef.current = time;
+  }, [time]);
 
-//   useEffect(() => {
-//     setLeaderboard(gameId, []);
-//   }, [gameId, setLeaderboard]);
+  const baseUrl = "https://english-platform-testpnoren.s3.us-east-1.amazonaws.com/";
 
-//   // Ref לשמירת הזמן המדויק
-//   const timeRef = useRef(time);
-//   useEffect(() => {
-//     timeRef.current = time;
-//   }, [time]);
+  //  Load data פעם אחת
+  useEffect(() => {
+    if (!data || hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
 
-//   const baseUrl = "https://english-platform-testpnoren.s3.us-east-1.amazonaws.com/";
+    const items: DoubleVisionItem[] = data.data?.data?.items || [];
+    setRounds(items);
+  }, [data]);
 
-//   // ✅ Load data פעם אחת
-//   useEffect(() => {
-//     if (!data || hasFetchedRef.current) return;
-//     hasFetchedRef.current = true;
+  //  הגדרת הצלילים
+  const correctSound = useRef<HTMLAudioElement | null>(null);
+  const wrongSound = useRef<HTMLAudioElement | null>(null);
 
-//     const items: DoubleVisionItem[] = data.data?.data?.items || [];
-//     setRounds(items);
-//   }, [data]);
+  useEffect(() => {
+    correctSound.current = new Audio("/sounds/good.mp3");
+    wrongSound.current = new Audio("/sounds/error.mp3");
+  }, []);
 
-//   // ✅ הגדרת הצלילים
-//   const correctSound = useRef<HTMLAudioElement | null>(null);
-//   const wrongSound = useRef<HTMLAudioElement | null>(null);
+  // פונקציה לאתחול המשחק
+  const restartGame = async () => {
+    setCurrentRound(0);
+    setSelectedIndex(null);
+    setIsCorrect(null);
+    const newData = await refetch();
+    const items: DoubleVisionItem[] = newData?.data?.data?.items || [];
+    setRounds(items);
+  };
 
-//   useEffect(() => {
-//     correctSound.current = new Audio("/sounds/צליל הצלחה.mp3");
-//     wrongSound.current = new Audio("/sounds/צליל שגיאה.mp3");
-//   }, []);
+  // פונקציה לסיום משחק + שליחת הנתונים לשרת
+  const handleGameOver = async () => {
+    await submitProgressMutation.mutate({
+      gameID: gameId,
+      userID: user?.userId!, // חייב להיות מזהה משתמש
+      score: parseInt(localStorage.getItem("totalScore") || "0"),
+      time: timeRef.current ?? 0,
+      rounds: currentRound + 1,
+    });
 
-//   // פונקציה לאתחול המשחק
-//   const restartGame = async () => {
-//     setCurrentRound(0);
-//     setSelectedIndex(null);
-//     setIsCorrect(null);
-//     const newData = await refetch();
-//     const items: DoubleVisionItem[] = newData?.data?.data?.items || [];
-//     setRounds(items);
-//   };
+    await refetchLeaderboard();
+    onGameOver?.();
+    restartGame();
+  };
 
-//   // פונקציה לסיום משחק + שליחת הנתונים לשרת
-//   const handleGameOver = async () => {
-//     await submitProgressMutation.mutate({
-//       gameID: gameId,
-//       userID: user?.userId!, // חייב להיות מזהה משתמש
-//       score: parseInt(localStorage.getItem("totalScore") || "0"),
-//       time: timeRef.current ?? 0,
-//       rounds: currentRound + 1,
-//     });
+  // לחיצה על אפשרות במשחק
+  const handleClick = (index: number) => {
+    if (paused || selectedIndex !== null) return;
 
-//     await refetchLeaderboard();
+    const round = rounds[currentRound];
+    const correct = index === round.correctIndex;
+    setSelectedIndex(index);
+    setIsCorrect(correct);
 
-//     if (leaderboardData?.data?.leaderboards) {
-//       setLeaderboard(gameId, [
-//         ...leaderboardData.data.leaderboards,
-//         ...(useLeaderboardStore.getState().leaderboard || []),
-//       ]);
-//     }
+    if (correct) {
+      if (correctSound.current) {
+        correctSound.current.pause();
+        correctSound.current.currentTime = 0;
+        correctSound.current.play();
+      }
+      onScoreChange?.((prev) => prev + 10);
+    } else {
+      if (wrongSound.current) {
+        wrongSound.current.pause();
+        wrongSound.current.currentTime = 0;
+        wrongSound.current.play();
+      }
+    }
 
-//     onGameOver?.();
-//     restartGame();
-//   };
+    // שמירה קצרה של האנימציה לפני מעבר
+    setTimeout(() => {
+      setSelectedIndex(null);
+      setIsCorrect(null);
 
-//   // לחיצה על אפשרות במשחק
-//   const handleClick = (index: number) => {
-//     if (paused || selectedIndex !== null) return;
+      if (currentRound < rounds.length - 1) {
+        setCurrentRound((prev) => prev + 1);
+      } else {
+        handleGameOver(); // סוף המשחק
+      }
+    }, 800);
+  };
 
-//     const round = rounds[currentRound];
-//     const correct = index === round.correctIndex;
-//     setSelectedIndex(index);
-//     setIsCorrect(correct);
+  if (isLoading || !rounds.length) return <p>Loading game data...</p>;
+  if (isError) return <p>Error loading DoubleVision game 😔</p>;
 
-//     if (correct) {
-//       if (correctSound.current) {
-//         correctSound.current.pause();
-//         correctSound.current.currentTime = 0;
-//         correctSound.current.play();
-//       }
-//       onScoreChange?.((prev) => prev + 10);
-//     } else {
-//       if (wrongSound.current) {
-//         wrongSound.current.pause();
-//         wrongSound.current.currentTime = 0;
-//         wrongSound.current.play();
-//       }
-//     }
+  const round = rounds[currentRound];
+  const progress = ((currentRound + 1) / rounds.length) * 100;
 
-//     // שמירה קצרה של האנימציה לפני מעבר
-//     setTimeout(() => {
-//       setSelectedIndex(null);
-//       setIsCorrect(null);
+  return (
+    <div className="doublevision">
+      <div
+        className="progress-bar"
+        style={{
+          width: "100%",
+          background: "#eee",
+          height: "10px",
+          borderRadius: "5px",
+          marginBottom: "15px",
+        }}
+      >
+        <div
+          className="progress-bar__fill"
+          style={{
+            width: `${progress}%`,
+            background: "#4caf50",
+            height: "100%",
+            borderRadius: "5px",
+            transition: "width 0.4s ease",
+          }}
+        />
+      </div>
 
-//       if (currentRound < rounds.length - 1) {
-//         setCurrentRound((prev) => prev + 1);
-//       } else {
-//         handleGameOver(); // סוף המשחק
-//       }
-//     }, 800);
-//   };
+      <h2 className="doublevision__word">{round.mainWord}</h2>
 
-//   if (isLoading || !rounds.length) return <p>Loading game data...</p>;
-//   if (isError) return <p>Error loading DoubleVision game 😔</p>;
-
-//   const round = rounds[currentRound];
-//   const progress = ((currentRound + 1) / rounds.length) * 100;
-
-//   return (
-//     <div className="doublevision">
-//       <div
-//         className="progress-bar"
-//         style={{
-//           width: "100%",
-//           background: "#eee",
-//           height: "10px",
-//           borderRadius: "5px",
-//           marginBottom: "15px",
-//         }}
-//       >
-//         <div
-//           className="progress-bar__fill"
-//           style={{
-//             width: `${progress}%`,
-//             background: "#4caf50",
-//             height: "100%",
-//             borderRadius: "5px",
-//             transition: "width 0.4s ease",
-//           }}
-//         />
-//       </div>
-
-//       <h2 className="doublevision__word">{round.mainWord}</h2>
-
-//       <div className="doublevision__grid">
-//         {round.options.map((option, idx) => (
-//           <motion.img
-//             key={option.label + idx}
-//             src={baseUrl + option.imageUrl}
-//             alt={option.label}
-//             className={`doublevision__option ${selectedIndex === idx && isCorrect ? "correct" : ""
-//               } ${selectedIndex === idx && isCorrect === false ? "wrong" : ""
-//               }`}
-//             whileHover={{ scale: 1.1, rotate: 3 }}
-//             transition={{ type: "spring", stiffness: 400, damping: 15 }}
-//             onClick={() => handleClick(idx)}
-//           />
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
+      <div className="doublevision__grid">
+        {round.options.map((option, idx) => (
+          <motion.img
+            key={option.label + idx}
+            src={`${baseUrl}${option.imageUrl.replace(/^\/+/, '')}`}
+            alt={option.label}
+            className={`doublevision__option ${selectedIndex === idx && isCorrect ? "correct" : ""
+              } ${selectedIndex === idx && isCorrect === false ? "wrong" : ""
+              }`}
+            whileHover={{ scale: 1.1, rotate: 3 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            onClick={() => handleClick(idx)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}

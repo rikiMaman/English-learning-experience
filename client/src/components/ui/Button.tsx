@@ -17,12 +17,12 @@ export default function Button({
 }: ButtonProps) {
   const baseClasses = "btn inline-flex items-center justify-center rounded-xl px-5 py-3 text-base font-medium shadow-md transition-all cursor-pointer";
 
-  const variantClasses = clsx({
-    "bg-indigo-600 hover:bg-indigo-500 text-white": variant === "primary",
-    "bg-white/10 hover:bg-white/15 border border-white/10 text-slate-100": variant === "secondary",
-  });
+  // const variantClasses = clsx({
+  //   "bg-indigo-600 hover:bg-indigo-500 text-white": variant === "primary",
+  //   "bg-white/10 hover:bg-white/15 border border-white/10 text-slate-100": variant === "secondary",
+  // });
 
-  const clickSound = new Audio("/audio/click.mp3");
+  const clickSound = new Audio("/sounds/click.mp3");
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (!muted) clickSound.play().catch(() => {});
@@ -30,7 +30,7 @@ export default function Button({
   };
 
   return (
-    <button {...props} onClick={handleClick} className={clsx(baseClasses, variantClasses, className)}>
+    <button {...props} onClick={handleClick} className={clsx(baseClasses, className)}>
       {children}
     </button>
   );
