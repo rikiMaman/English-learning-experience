@@ -131,7 +131,6 @@ namespace EnglishGamesPlatform.Backend.Data
                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(modelBuilder);
-
         }
     }
 }

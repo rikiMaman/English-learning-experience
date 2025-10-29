@@ -9,12 +9,11 @@ import type { GameResponseMap } from "../types";
 import { GuessMasterAskRequest, GuessMasterAskResponse } from "@/types/gamesTypes/GuessMaster";
 
 async function handleResponse<T>(res: Response): Promise<T> {
-  const text = await res.text();
+  const json = await res.json();
   if (!res.ok) {
-    const data = text ? JSON.parse(text) : {};
-    throw new Error(data?.message || res.statusText);
+    throw new Error(json?.message || res.statusText);
   }
-  return text ? JSON.parse(text) : ({} as T);
+  return json ? json : ({} as T);
 }
 
 export async function fetchGameData<T extends GameId>(

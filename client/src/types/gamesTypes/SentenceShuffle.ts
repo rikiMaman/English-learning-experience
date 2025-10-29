@@ -1,11 +1,12 @@
+import { GameResponseBase } from "..";
+
 export interface SentenceShuffleItem {
-   data: {
-  id: number | string;
   words: string[];
-  correctSentence: string;}
+  correctSentence: string;
 }
 
-export interface SentenceShuffleResponse {
-  GameName: "SentenceShuffle"; 
-  data: SentenceShuffleItem;
+export interface SentenceShuffleData {
+  rounds: SentenceShuffleItem[];
 }
+export interface SentenceShuffleResponse
+  extends GameResponseBase<4, SentenceShuffleData> {}

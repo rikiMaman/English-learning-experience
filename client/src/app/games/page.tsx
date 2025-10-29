@@ -32,6 +32,7 @@ export default function HomePage() {
     1: { color: "from-purple-400 to-violet-500", emoji: "❓" },
     2: { color: "from-sky-400 to-blue-500", emoji: "🪢" },
     3: { color: "from-yellow-400 to-orange-500", emoji: "🔤" },
+    4: { color: "from-cyan-400 to-teal-500", emoji: "📝" },
     6: { color: "from-green-400 to-emerald-500", emoji: "🧩" },
     7: { color: "from-pink-400 to-rose-500", emoji: "📚" },
     8: { color: "from-indigo-400 to-blue-600", emoji: "🧠" },

@@ -18,7 +18,7 @@ import { PhraseCrazeResponse } from "./gamesTypes/PhraseCraze";
 import { PictureHangmanResponse } from "./gamesTypes/PictureHangman";
 
 export interface GameResponseMap {
-  sentenceShuffle: SentenceShuffleResponse;
+  4: SentenceShuffleResponse;
   17 : PicPickResponse;
   9: GrammarGuruResponse;
   1: OppositeQuestResponse;

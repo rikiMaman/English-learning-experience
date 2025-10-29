@@ -19,6 +19,8 @@ export type GameProps = {
   onGameOver?: () => void;
   paused?: boolean;
   time?: number;
+  score?: number;
+  setScore?: React.Dispatch<React.SetStateAction<number>>;
 };
 
 type GameLayoutProps = {
@@ -157,10 +159,11 @@ export default function GameLayout({ children, gameTitle }: GameLayoutProps) {
                 onScoreChange: handleScoreChange,
                 onGameOver: handleGameOver,
                 paused: paused || countdownActive,
-                time, 
+                time,
+                score,
+                setScore,
               })}
           </div>
-
         </div>
       )}
 

@@ -58,14 +58,15 @@ builder.Services.AddScoped<IGameResultRepository, GameResultRepository>();
 #endregion
 
 #region General Game
-
 builder.Services.AddScoped<IGeneralGameService, GeneralGameService>();
 builder.Services.AddScoped<IGeneralGameRepository, PictureHangmanRepository>();
 builder.Services.AddScoped<IGeneralGameRepository, OppositeQuestRepository>();
 builder.Services.AddScoped<IGeneralGameRepository, MiniWordleRepository>();
 builder.Services.AddScoped<IGeneralGameRepository, LetterChaosRepository>();
-
 builder.Services.AddScoped<IGeneralGameRepository, TwinWordsGameRepository>();
+builder.Services.AddScoped<IGeneralGameRepository, SentenceShuffleRepository>();
+#endregion
+
 builder.Services.AddScoped<IGeneralGameRepository, DoubleVisionRepository>();
 builder.Services.AddScoped<IGeneralGameRepository, MemoryMatchSynonymsRepository>();
 builder.Services.AddScoped<IGeneralGameRepository, PicPickRepository>();
@@ -93,24 +94,22 @@ builder.Services.AddScoped<IGeneralGameRepository, WordSorterRepository>();
 
 
 
-#endregion
 
 
 builder.Services.AddCustomServices();
 
-
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-//})
-//.AddCookie()
-//.AddGoogle(options =>
-//{
-//    options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
-//    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
-//    options.CallbackPath = "/signin-google";
-//});
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+})
+.AddCookie()
+.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+    options.CallbackPath = "/signin-google";
+});
 
 var app = builder.Build();
 

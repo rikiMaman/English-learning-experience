@@ -1,4 +1,4 @@
-import { GameResponseBase } from "./index";
+import { GameResponseBase } from "..";
 export interface TwinWordsItem {
   id: any;
   data: {

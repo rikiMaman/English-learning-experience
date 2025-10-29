@@ -45,29 +45,17 @@ export default function MiniWordleGame({
     };
 
     useEffect(() => {
-        const fetchNewWord = async () => {
-            try {
-                setLoadingWord(true);
-                const response = await refetch();
-                setWordFromData(response?.data?.data?.data);
-            } catch (err) {
-                console.error("Error loading word:", err);
-            } finally {
-                setLoadingWord(false);
-            }
-        };
-
-        fetchNewWord();
+        loadNewWord();
     }, [refetch]);
 
-    const loadNewWord = async () => {
+    const loadNewWord = async (resetFetched = false) => {
         try {
             setLoadingWord(true);
-            hasFetchedRef.current = false;
-            const newData = await refetch();
-            setWordFromData(newData?.data?.data?.data);
+            if (resetFetched) hasFetchedRef.current = false;
+            const { data } = await refetch();
+            setWordFromData(data?.data?.data);
         } catch (err) {
-            console.error("Error loading new word:", err);
+            console.error("Error loading word:", err);
         } finally {
             setLoadingWord(false);
         }
@@ -106,7 +94,7 @@ export default function MiniWordleGame({
         <>
             <Button
                 onClick={() => handleGameOver()}
-             
+
             >
                 End Game
             </Button>

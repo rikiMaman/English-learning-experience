@@ -4,7 +4,7 @@ import { GameProps } from "@/components/common/GameLayout";
 import { useGameData } from "@/hooks/useGameData";
 import { useSubmitProgress } from "@/hooks/useSubmitProgress";
 import { GameId } from "@/types";
-import { PicPickItem } from "@/types/PicPick";
+import { PicPickItem } from "@/types/gamesTypes/PicPick";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 

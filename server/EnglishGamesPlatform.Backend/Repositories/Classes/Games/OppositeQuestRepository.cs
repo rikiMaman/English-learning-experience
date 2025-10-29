@@ -3,7 +3,6 @@ using EnglishGamesPlatform.Backend.Models.GameInitialDatas;
 using EnglishGamesPlatform.Backend.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace EnglishGamesPlatform.Backend.Repositories.Classes.Games
 {
     public class OppositeQuestRepository : IGeneralGameRepository
