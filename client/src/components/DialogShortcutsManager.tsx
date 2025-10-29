@@ -10,12 +10,12 @@ import { useKeyboardShortcuts } from "../app/hooks/useKeyboardShortcuts";
 //   onOpenToast: () => void;
 // };
 
-export default function DialogShortcutsManager({
-  onOpenHelp,
-  onOpenConfirm,
-  onOpenResults,
-  onOpenToast,
-}:
+// export default function DialogShortcutsManager({
+//   onOpenHelp,
+//   onOpenConfirm,
+//   onOpenResults,
+//   onOpenToast,
+// }:
 //  DialogShortcutsManagerProps) {
 //   // קיצור H - עזרה
 //   useKeyboardShortcuts(["h", "H"], onOpenHelp);
