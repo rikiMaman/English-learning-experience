@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-// import { useKeyboardShortcuts } from "../app/hooks/useKeyboardShortcuts";
+import { useKeyboardShortcuts } from "../app/hooks/useKeyboardShortcuts";
 
 type DialogShortcutsManagerProps = {
   onOpenHelp: () => void;
